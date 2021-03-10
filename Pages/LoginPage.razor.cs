@@ -2,6 +2,7 @@ using Microsoft.AspNetCore.Components;
 using Mlurple_WebApp.Models;
 using System.Net.Http;
 using System;
+using Mlurple_WebApp.Services;
 
 namespace Mlurple_WebApp.Pages
 {
@@ -12,12 +13,15 @@ namespace Mlurple_WebApp.Pages
 
         public async void HandleValidSubmit()
         {
+            string encryptedUsername = EncryptAndDecryptService.Encrypt("key goes here", userModel.Username);
+            string encryptedPassword = EncryptAndDecryptService.Encrypt("key goes here", userModel.Password);
+
             HttpClient client = new HttpClient();
             HttpRequestMessage request = new HttpRequestMessage()
             {
                 Method = HttpMethod.Get,
                 RequestUri = new
-                Uri($"https://mysupersecretapi.com/api/User?username={userModel.Username}&&password={userModel.Password}")
+                Uri($"https://mysupersecretapi.com/api/User?username={encryptedUsername}&&password={encryptedPassword}")
             };
             using (var response = await client.SendAsync(request))
             {
@@ -26,13 +30,12 @@ namespace Mlurple_WebApp.Pages
                 if (body.Result == "true")
                 {
                     LoginStatus = "";
-                    LoginStatus = "bonjour";
                     SessionUser.username = userModel.Username;
-                    LoginStatus = $"{SessionUser.username} hi";
+                    LoginStatus = $"Hello, {SessionUser.username}.";
                 }
                 else if (body.Result == "false")
                 {
-                    LoginStatus = "Username or password is incorrect";
+                    LoginStatus = $"Username or password is incorrect {userModel.Username} {userModel.Password}";
                 }
             }
         }
