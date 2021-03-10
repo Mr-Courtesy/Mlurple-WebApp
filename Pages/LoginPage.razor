@@ -1,0 +1,12 @@
+@page "/login"
+@using Models
+@inherits LoginPageBase
+<EditForm Model="@userModel" OnValidSubmit="@HandleValidSubmit">
+    <DataAnnotationsValidator />
+    <ValidationSummary />
+
+    <input type="text" @bind-value="userModel.Username" />
+    <input type="password" @bind-value="userModel.Password" />
+    <input type="submit" />
+</EditForm>
+<h1>@LoginStatus</h1>
