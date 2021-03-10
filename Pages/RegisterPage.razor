@@ -1,3 +1,14 @@
 ﻿@page "/register"
+@using Mlurple_WebApp.Models;
+@inherits RegisterPageBase;
 
+<EditForm Model="@userModel" OnValidSubmit="@HandleValidSubmit">
+    <DataAnnotationsValidator />
+    <ValidationSummary />
+
+    <input type="text" @bind-value="userModel.Username" />
+    <input type="password" @bind-value="userModel.Password" />
+    <input type="submit" />
+</EditForm>
+<h1>@RegisterStatus</h1>
 <h1>hi</h1>
