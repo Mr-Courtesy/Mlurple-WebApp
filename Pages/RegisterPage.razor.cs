@@ -12,6 +12,8 @@ namespace Mlurple_WebApp.Pages
     {
         public UserModel userModel = new UserModel();
         public string RegisterStatus;
+        [Inject]
+        public NavigationManager NavManager { get; set; }
         public async void HandleValidSubmit()
         {
             char[] _username = userModel.Username.ToCharArray();
@@ -65,11 +67,14 @@ namespace Mlurple_WebApp.Pages
                         if (body.Result == "User was succesfully registered.")
                         {
                             SessionUser.username = userModel.Username;
+                            Session.isAuthorized = true;
                             RegisterStatus = SessionUser.username;
                             RegisterStatus = body.Result;
+                            NavManager.NavigateTo("/home");
                         }
                         else
                         {
+                            Session.isAuthorized = false;
                             RegisterStatus = body.Result;
                         }
                     }
