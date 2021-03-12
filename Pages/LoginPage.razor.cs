@@ -31,11 +31,11 @@ namespace Mlurple_WebApp.Pages
                 {
                     LoginStatus = "";
                     SessionUser.username = userModel.Username;
-                    LoginStatus = $"Hello, {SessionUser.username}.";
+                    LoginStatus = $"{body.Result}: Hello, {SessionUser.username}.";
                 }
                 else if (body.Result == "false")
                 {
-                    LoginStatus = $"Username or password is incorrect {userModel.Username} {userModel.Password}";
+                    LoginStatus = $"{body.Result}: Username or password is incorrect {userModel.Username} {userModel.Password}";
                 }
             }
         }
