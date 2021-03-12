@@ -11,6 +11,7 @@ namespace Mlurple_WebApp.Pages
         {
             Session.isAuthorized = false;
             NavManager.NavigateTo("/");
+            SessionUser.projects.Clear();
         }
     }
 }
