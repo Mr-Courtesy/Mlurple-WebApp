@@ -1,0 +1,15 @@
+@page "/home"
+@using Mlurple_WebApp.Pages
+@using Mlurple_WebApp.Models;
+
+@inherits HomePageBase
+
+<h1>@AuthorizedStatus</h1>
+@if (!Session.isAuthorized)
+{
+    <h1>You're not logged in</h1> 
+}
+else if (Session.isAuthorized)
+{
+    <h1>Hello @SessionUser.username</h1>
+}
