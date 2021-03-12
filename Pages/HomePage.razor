@@ -11,4 +11,16 @@
 else if (Session.isAuthorized)
 {
     <h1>Hello @SessionUser.username</h1>
+
+    @if (hasProjects == true)
+    {
+        @foreach (var p in SessionUser.projects)
+        {
+            <h1>@p</h1>
+        }
+    }
+    else if (hasProjects == false)
+    {
+        <h1>No projects found.</h1>
+    }
 }
