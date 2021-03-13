@@ -4,11 +4,14 @@ using System.Threading.Tasks;
 using System.Net.Http;
 using System;
 using Mlurple_WebApp.Services;
+using Microsoft.AspNetCore.Components.Web;
 
 namespace Mlurple_WebApp.Pages
 {
     public class HomePageBase : ComponentBase
     {
+        [Inject]
+        public NavigationManager navigationManager { get; set; }
         public static bool hasProjects { get; set; }
         public static string UserProjectResponse { get; set; }
         protected override void OnInitialized()
@@ -48,6 +51,11 @@ namespace Mlurple_WebApp.Pages
                     }
                 }
             }
+        }
+
+        public void OpenCreationPage(MouseEventArgs e)
+        {
+            navigationManager.NavigateTo("/create");
         }
     }
 }
