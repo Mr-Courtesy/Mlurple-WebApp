@@ -1,0 +1,10 @@
+@page "/create"
+@inherits CreateProjectBase
+
+<EditForm Model="@projectSpace" OnValidSubmit="@CreateNewProject">
+    <DataAnnotationsValidator />
+    <ValidationSummary />
+
+    <InputText aria-placeholder="Project name..."  @bind-Value="projectSpace.Name"/>
+    <input type="submit">Create
+</EditForm>
