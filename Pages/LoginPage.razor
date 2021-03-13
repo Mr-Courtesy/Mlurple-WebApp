@@ -5,8 +5,8 @@
     <DataAnnotationsValidator />
     <ValidationSummary />
 
-    <input type="text" @bind-value="userModel.Username" />
-    <input type="password" @bind-value="userModel.Password" />
+    <input type="text" aria-placeholder="username" @bind-value="userModel.Username" />
+    <input type="password" aria-placeholder="password" @bind-value="userModel.Password" />
     <input type="submit" />
 </EditForm>
 <h1>@LoginStatus</h1>
