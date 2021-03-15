@@ -1,7 +1,7 @@
 @page "/login"
 @inherits LoginPageBase
 
-<main class="form-signin">
+<main class="login">
     <EditForm Model="@userModel" OnValidSubmit="@HandleValidSubmit">
         <DataAnnotationsValidator />
         <ValidationSummary />
