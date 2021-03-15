@@ -1,9 +1,9 @@
 using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Components.Web;
-using Mlurple_WebApp.Models;
-using Mlurple_WebApp.Services;
+using Mlurple_WebApp.Classes;
 using System;
 using System.Net.Http;
+using NETCore.Encrypt;
 
 namespace Mlurple_WebApp.Pages
 {
@@ -16,7 +16,7 @@ namespace Mlurple_WebApp.Pages
         {
             if (Session.isAuthorized)
             {
-                string encryptedUsername = EncryptAndDecryptService.Encrypt("key", SessionUser.username);
+                string encryptedUsername = EncryptProvider.AESEncrypt(SessionUser.username, "key");
                 HttpClient client = new HttpClient();
                 HttpRequestMessage request = new HttpRequestMessage()
                 {
