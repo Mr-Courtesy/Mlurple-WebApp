@@ -1,7 +1,7 @@
 using System;
 using System.ComponentModel.DataAnnotations;
 
-namespace Mlurple_WebApp.Models
+namespace Mlurple_WebApp.Classes
 {
     public class UserModel
     {

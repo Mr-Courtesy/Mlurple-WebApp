@@ -1,6 +1,6 @@
 using System;
 
-namespace Mlurple_WebApp.Models
+namespace Mlurple_WebApp.Classes
 {
     public static class Session
     {
