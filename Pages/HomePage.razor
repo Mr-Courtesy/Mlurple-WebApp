@@ -1,7 +1,6 @@
 @page "/home"
 @using Mlurple_WebApp.Pages
-@using Mlurple_WebApp.Models;
-
+@using Mlurple_WebApp.Classes
 @inherits HomePageBase
 
 @if (!Session.isAuthorized)
@@ -10,7 +9,14 @@
 }
 else if (Session.isAuthorized)
 {
-    <h1>Hello @SessionUser.username</h1>
+    <div class="py-5 text-center container">
+        <div class="row py-lg-5">
+            <div class="col-lg-6 col-md-8 mx-auto">
+                <h1 class="f1-dark">Hello, @SessionUser.username</h1>
+                <p class="lead text-muted">Team collaboration made easier, get started on your next project now!</p>
+            </div>
+        </div>
+    </div>
 
     @if (hasProjects == true)
     {
