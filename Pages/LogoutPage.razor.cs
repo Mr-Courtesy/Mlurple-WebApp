@@ -1,5 +1,5 @@
 using Microsoft.AspNetCore.Components;
-using Mlurple_WebApp.Models;
+using Mlurple_WebApp.Classes;
 
 namespace Mlurple_WebApp.Pages
 {
