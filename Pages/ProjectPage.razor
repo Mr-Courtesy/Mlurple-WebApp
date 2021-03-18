@@ -1,0 +1,16 @@
+@page "/project"
+@using Mlurple_WebApp.Classes
+
+@inherits ProjectPageBase
+
+@if (Session.isAuthorized)
+{
+    @foreach (string info in Session.projectInfo)
+    {
+        <p>@info</p>
+    }
+}
+else if (!Session.isAuthorized)
+{
+    <p>You're not logged in.</p>
+}

@@ -18,13 +18,13 @@ namespace Mlurple_WebApp.Pages
         {
             if (Session.isAuthorized)
             {
-                string encryptedUsername = EncryptProvider.AESEncrypt(SessionUser.username, "key");
+                string encryptedUsername = EncryptProvider.AESEncrypt(SessionUser.username, "0uNFCkLHqc5G0l3lhfZ4q3SZskhBn6jt");
 
                 HttpClient client = new HttpClient();
                 HttpRequestMessage request = new HttpRequestMessage()
                 {
                     Method = HttpMethod.Get,
-                    RequestUri = new Uri($"https://mysupersecretapi.com/api/ProjectSpace?username={encryptedUsername}")
+                    RequestUri = new Uri($"https://testp-blazor-api.herokuapp.com/api/ProjectSpace?username={encryptedUsername}")
                 };
 
                 using (var response = client.Send(request))

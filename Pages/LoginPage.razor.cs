@@ -10,20 +10,21 @@ namespace Mlurple_WebApp.Pages
 {
     public class LoginPageBase : ComponentBase
     {
-
+        [Inject]
+        protected UserModel UserModel { get; set; }
         protected string LoginStatus;
-        public UserModel userModel = new UserModel();
+        // public UserModel userModel = new UserModel();
         [Inject]
         public NavigationManager NavManager { get; set; }
 
         public async void HandleValidSubmit()
         {
-            char[] _username = userModel.Username.ToCharArray();
+            char[] _username = UserModel.Username.ToCharArray();
             bool isValidUsername = _username.All(Char.IsLetterOrDigit);
             bool hasOnlyNumbers = _username.All(char.IsNumber);
             bool usernameIsLongEnough = _username.Length >= 3;
             bool usernameIsTooLong = _username.Length > 15;
-            char[] _password = userModel.Password.ToCharArray();
+            char[] _password = UserModel.Password.ToCharArray();
             bool passwordIsLongEnough = _password.Length >= 6;
             bool passwordIsNotValid = _password.All(Char.IsNumber);
             bool passwordHasWhitespace = _password.Contains(' ');
@@ -65,8 +66,8 @@ namespace Mlurple_WebApp.Pages
             var aeskey = EncryptProvider.CreateAesKey();
             var key = aeskey.Key;
 
-            string encryptedUsername = EncryptProvider.AESEncrypt(userModel.Username, "key");
-            string encryptedPassword = EncryptProvider.AESEncrypt(userModel.Password, "key");
+            string encryptedUsername = EncryptProvider.AESEncrypt(UserModel.Username, "0uNFCkLHqc5G0l3lhfZ4q3SZskhBn6jt");
+            string encryptedPassword = EncryptProvider.AESEncrypt(UserModel.Password, "0uNFCkLHqc5G0l3lhfZ4q3SZskhBn6jt");
 
             if (isValidUsername && usernameIsLongEnough && !hasOnlyNumbers && passwordIsLongEnough && !passwordIsNotValid && !passwordHasWhitespace && !passwordIsTooLong)
             {
@@ -75,7 +76,7 @@ namespace Mlurple_WebApp.Pages
                 {
                     Method = HttpMethod.Get,
                     RequestUri = new
-                    Uri($"https://mysupersecretapi.com/api/User?username={encryptedUsername}&&password={encryptedPassword}")
+                    Uri($"https://testp-blazor-api.herokuapp.com/api/User?username={encryptedUsername}&&password={encryptedPassword}")
                 };
                 using (var response = await client.SendAsync(request))
                 {
@@ -85,14 +86,14 @@ namespace Mlurple_WebApp.Pages
                         var body = response.Content.ReadAsStringAsync();
                         if (body.Result == "true")
                         {
-                            SessionUser.username = userModel.Username;
+                            SessionUser.username = UserModel.Username;
                             Session.isAuthorized = true;
                             NavManager.NavigateTo("/home");
                         }
                         else if (body.Result == "false")
                         {
                             Session.isAuthorized = false;
-                            LoginStatus = $"{body.Result}: Username or password is incorrect {userModel.Username} {userModel.Password}";
+                            LoginStatus = $"{body.Result}: Username or password is incorrect {UserModel.Username} {UserModel.Password}";
                         }
                         else
                         {

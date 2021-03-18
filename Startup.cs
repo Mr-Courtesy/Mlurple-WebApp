@@ -10,6 +10,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Mlurple_WebApp.Data;
+using Mlurple_WebApp.Classes;
 
 namespace Mlurple_WebApp
 {
@@ -29,6 +30,7 @@ namespace Mlurple_WebApp
             services.AddRazorPages();
             services.AddServerSideBlazor();
             services.AddSingleton<WeatherForecastService>();
+            services.AddScoped<UserModel>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
