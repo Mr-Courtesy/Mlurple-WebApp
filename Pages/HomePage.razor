@@ -3,12 +3,14 @@
 @using Mlurple_WebApp.Classes
 @inherits HomePageBase
 
-@if (!Session.isAuthorized)
+@if (_authState == false)
 {
+    @CurrentUser
     <h1>You're not logged in</h1> 
 }
-else if (Session.isAuthorized)
+else if (_authState == true)
 {
+    @CurrentUser
     <div class="py-5 text-center container">
         <div class="row py-lg-5">
             <div class="col-lg-6 col-md-8 mx-auto">

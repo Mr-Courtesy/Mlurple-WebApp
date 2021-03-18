@@ -2,16 +2,13 @@
 @inherits LoginPageBase
 
 <main class="login">
-    <EditForm Model="@UserModel" OnValidSubmit="@HandleValidSubmit">
-        <DataAnnotationsValidator />
-        <ValidationSummary />
-
+    <form @onsubmit="@HandleValidSubmit">
         <h3 id="loginHeader">Login</h3>
         <br>
-        <input type="text" id="loginUsername" placeholder="Username" class="form-control" required autofocus @bind-value="UserModel.Username" />
-        <input type="password" placeholder="Password" @bind-value="UserModel.Password" class="form-control" required autofocus/>
+        <input type="text" id="loginUsername" placeholder="Username" class="form-control" required autofocus @bind-value="_Username" />
+        <input type="password" placeholder="Password" @bind-value="_Password" class="form-control" required autofocus/>
         <input type="submit" class="w-100 btn btn-lg loginButton" />
-    </EditForm>
+    </form>
 </main>
 
 <h1>@LoginStatus</h1>

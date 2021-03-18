@@ -1,5 +1,7 @@
 @inherits LayoutComponentBase
 @using Mlurple_WebApp.Classes
+@using Blazored.LocalStorage
+@inject ILocalStorageService StorageService
 
 @* <div class="page">
     <div class="sidebar">
@@ -9,11 +11,11 @@
 
 <div class="main">
     <div class="top-row px-4">
-        @if (Session.isAuthorized)
+        @if (isAuthorized == true)
         {
             <a href="/logout">Logout</a>
         }
-        else if (!Session.isAuthorized)
+        else if (isAuthorized == false)
         {
             <a href="/register">Register</a>
             <a href="/login">Login</a>
@@ -25,3 +27,11 @@
     </div>
 </div>
 @* </div> *@
+@code
+{
+    bool isAuthorized;
+    protected override async Task OnInitializedAsync()
+    {
+        isAuthorized = await StorageService.GetItemAsync<bool>("authorized");
+    }
+}

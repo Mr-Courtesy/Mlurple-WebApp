@@ -11,6 +11,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Mlurple_WebApp.Data;
 using Mlurple_WebApp.Classes;
+using Blazored.LocalStorage;
 
 namespace Mlurple_WebApp
 {
@@ -31,6 +32,7 @@ namespace Mlurple_WebApp
             services.AddServerSideBlazor();
             services.AddSingleton<WeatherForecastService>();
             services.AddScoped<UserModel>();
+            services.AddBlazoredLocalStorage();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

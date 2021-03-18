@@ -5,20 +5,29 @@ using System.Net.Http;
 using System;
 using Microsoft.AspNetCore.Components.Web;
 using NETCore.Encrypt;
+using Blazored.LocalStorage;
 
 namespace Mlurple_WebApp.Pages
 {
     public class HomePageBase : ComponentBase
     {
+        protected string CurrentUser;
+        [Inject]
+        protected ILocalStorageService StorageService { get; set; }
         [Inject]
         public NavigationManager navigationManager { get; set; }
         public static bool hasProjects { get; set; }
         public static string UserProjectResponse { get; set; }
-        protected override void OnInitialized()
+        protected bool _authState { get; set; }
+        protected override async Task OnInitializedAsync()
         {
-            if (Session.isAuthorized)
+            CurrentUser = await StorageService.GetItemAsync<string>("username");
+            bool authState = await StorageService.GetItemAsync<bool>("authorized"); 
+            authState = _authState;
+            if (authState)
             {
-                string encryptedUsername = EncryptProvider.AESEncrypt(SessionUser.username, "0uNFCkLHqc5G0l3lhfZ4q3SZskhBn6jt");
+                string username = await StorageService.GetItemAsync<string>("username");
+                string encryptedUsername = EncryptProvider.AESEncrypt(username, "0uNFCkLHqc5G0l3lhfZ4q3SZskhBn6jt");
 
                 HttpClient client = new HttpClient();
                 HttpRequestMessage request = new HttpRequestMessage()
