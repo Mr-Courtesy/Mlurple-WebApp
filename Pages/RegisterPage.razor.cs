@@ -72,15 +72,15 @@ namespace Mlurple_WebApp.Pages
                     {
                         if (passwordIsLongEnough && !passwordIsNotValid && !passwordHasWhitespace && !passwordIsTooLong)
                         {
-                            string encryptedUsername = EncryptProvider.AESEncrypt(userModel.Username, "0uNFCkLHqc5G0l3lhfZ4q3SZskhBn6jt");
-                            string encryptedPassword = EncryptProvider.AESEncrypt(userModel.Password, "0uNFCkLHqc5G0l3lhfZ4q3SZskhBn6jt");
+                            string encryptedUsername = EncryptProvider.AESEncrypt(userModel.Username, "key");
+                            string encryptedPassword = EncryptProvider.AESEncrypt(userModel.Password, "key");
 
                             HttpClient client = new HttpClient();
                             HttpRequestMessage request = new HttpRequestMessage()
                             {
                                 Method = HttpMethod.Post,
                                 RequestUri = new
-                                Uri($"https://testp-blazor-api.herokuapp.com/api/User?username={encryptedUsername}&&password={encryptedPassword}")
+                                Uri($"https://mysupersecretapi.com/api/User?username={encryptedUsername}&&password={encryptedPassword}")
                             };
                             using (var response = await client.SendAsync(request))
                             {

@@ -17,7 +17,6 @@ namespace Mlurple_WebApp.Pages
         [Inject]
         public NavigationManager navigationManager { get; set; }
         public static bool hasProjects { get; set; }
-        public static string UserProjectResponse { get; set; }
         protected bool _authState { get; set; }
         protected override async Task OnInitializedAsync()
         {
@@ -27,13 +26,13 @@ namespace Mlurple_WebApp.Pages
             if (authState)
             {
                 string username = await StorageService.GetItemAsync<string>("username");
-                string encryptedUsername = EncryptProvider.AESEncrypt(username, "0uNFCkLHqc5G0l3lhfZ4q3SZskhBn6jt");
+                string encryptedUsername = EncryptProvider.AESEncrypt(username, "key");
 
                 HttpClient client = new HttpClient();
                 HttpRequestMessage request = new HttpRequestMessage()
                 {
                     Method = HttpMethod.Get,
-                    RequestUri = new Uri($"https://testp-blazor-api.herokuapp.com/api/ProjectSpace?username={encryptedUsername}")
+                    RequestUri = new Uri($"https://mysupersecretapi.com/api/ProjectSpace?username={encryptedUsername}")
                 };
 
                 using (var response = client.Send(request))
