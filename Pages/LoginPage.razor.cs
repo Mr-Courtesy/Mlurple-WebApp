@@ -5,22 +5,25 @@ using System;
 using NETCore.Encrypt;
 using System.Linq;
 using Blazored.LocalStorage;
+using System.Threading.Tasks;
+using System.Collections.Generic;
 
 namespace Mlurple_WebApp.Pages
 {
     public class LoginPageBase : ComponentBase
     {
+        protected string CurrentUser;
         [Inject]
         protected ILocalStorageService StorageService { get; set; }
-        [Inject]
-        protected UserModel UserModel { get; set; }
         protected string _Username;
         protected string _Password;
-        protected string _password;
         protected string LoginStatus;
-        // public UserModel userModel = new UserModel();
         [Inject]
         public NavigationManager NavManager { get; set; }
+        protected override async Task OnInitializedAsync()
+        {
+            CurrentUser = await StorageService.GetItemAsync<string>("username");
+        }
 
         public async void HandleValidSubmit()
         {
@@ -34,42 +37,10 @@ namespace Mlurple_WebApp.Pages
             bool passwordIsNotValid = _password.All(Char.IsNumber);
             bool passwordHasWhitespace = _password.Contains(' ');
             bool passwordIsTooLong = _password.Length > 20;
-            if (!isValidUsername)
+            if (!isValidUsername || hasOnlyNumbers || !usernameIsLongEnough || usernameIsTooLong || passwordIsNotValid || !passwordIsLongEnough || passwordHasWhitespace || passwordIsTooLong)
             {
                 LoginStatus = "Username or password is incorrect.";
             }
-            if (hasOnlyNumbers)
-            {
-                LoginStatus = "Username or password is incorrect.";
-            }
-            if (!usernameIsLongEnough)
-            {
-                LoginStatus = "Username or password is incorrect.";
-            }
-            if (usernameIsTooLong)
-            {
-                LoginStatus = "Username or password is incorrect.";
-            }
-            if (passwordIsNotValid)
-            {
-                LoginStatus = "Username or password is incorrect.";
-            }
-            if (!passwordIsLongEnough)
-            {
-                LoginStatus = "Username or password is incorrect.";
-            }
-
-            if (passwordHasWhitespace)
-            {
-                LoginStatus = "Username or password is incorrect.";
-            }
-
-            if (passwordIsTooLong)
-            {
-                LoginStatus = "Username or password is incorrect.";
-            }
-            var aeskey = EncryptProvider.CreateAesKey();
-            var key = aeskey.Key;
 
             string encryptedUsername = EncryptProvider.AESEncrypt(_Username, "key");
             string encryptedPassword = EncryptProvider.AESEncrypt(_Password, "key");
@@ -92,24 +63,53 @@ namespace Mlurple_WebApp.Pages
                         if (body.Result == "true")
                         {
                             await StorageService.SetItemAsync("username", _Username);
-                            await StorageService.SetItemAsync("authorized", true);
+                            await StorageService.SetItemAsync("password", encryptedPassword);
+                            await StorageService.SetItemAsync("authstate", "authorized");
+                            await GetUserProjects(_Username);
                             NavManager.NavigateTo("/home");
                         }
                         else if (body.Result == "false")
                         {
-                            await StorageService.SetItemAsync("authorized", false);
-                            LoginStatus = $"{body.Result}: Username or password is incorrect {UserModel.Username} {UserModel.Password}";
-                        }
-                        else
-                        {
-                            await StorageService.SetItemAsync("authorized", false);
-                            LoginStatus = "Whoops! An error occured.";
+                            bool containsUser = await StorageService.ContainKeyAsync("username");
+                            await StorageService.SetItemAsync<string>("authstate", "notAuthorized");
+                            LoginStatus = $"{body.Result}: Username or password is incorrect";
                         }
                     }
-                    else if (!response.IsSuccessStatusCode)
+                }
+            }
+        }
+        protected async Task GetUserProjects(string username)
+        {
+            string encryptedUsername = EncryptProvider.AESEncrypt(username, "key");
+
+            HttpClient client = new HttpClient();
+            HttpRequestMessage request = new HttpRequestMessage()
+            {
+                Method = HttpMethod.Get,
+                RequestUri = new Uri($"https://mysupersecretapi.com/api/ProjectSpace?username={encryptedUsername}")
+            };
+
+            using (var response = await client.SendAsync(request))
+            {
+                response.EnsureSuccessStatusCode();
+                var body = response.Content.ReadAsStringAsync().Result;
+                if (body == "No projects found.")
+                {
+                    await StorageService.SetItemAsync("projects", "No projects found");
+                }
+                else
+                {
+                    var projects = body.Split("&");
+                    List<string> userProjects = new List<string>();
+
+                    foreach (var proj in projects)
                     {
-                        LoginStatus = "An error occured.";
+                        if (proj != null && !userProjects.Contains(proj))
+                        {
+                            userProjects.Add(proj);
+                        }
                     }
+                    await StorageService.SetItemAsync("projects", userProjects);
                 }
             }
         }
