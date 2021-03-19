@@ -1,7 +1,12 @@
 @page "/login"
 @inherits LoginPageBase
 
-<main class="login">
+@if (CurrentUser != null)
+{
+    <h1>You're already logged in.</h1>
+}
+else {
+    <main class="login">
     <form @onsubmit="@HandleValidSubmit">
         <h3 id="loginHeader">Login</h3>
         <br>
@@ -12,3 +17,4 @@
 </main>
 
 <h1>@LoginStatus</h1>
+}
