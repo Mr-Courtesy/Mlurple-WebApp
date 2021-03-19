@@ -1,7 +1,31 @@
 @page "/"
+@inject Blazored.LocalStorage.ILocalStorageService StorageService
+@inject NavigationManager NavManager
 
-<h1>Hello, world!</h1>
+@if (auth == false)
+{
+    <h1>Hello, world!</h1>
 
-Welcome to your new app.
+    <h2>Welcome to your new app.</h2>
 
-<SurveyPrompt Title="How is Blazor working for you?" />
+    <h1><SurveyPrompt Title="How is Blazor working for you?" /></h1>
+}
+
+
+@code 
+{
+    bool auth;
+    string username;
+    protected override async Task OnInitializedAsync()
+    {
+        username = await StorageService.GetItemAsync<string>("username");
+        if (username != null)
+        {
+            NavManager.NavigateTo("/home");
+        }
+        else 
+        {
+            auth = false;
+        }
+    }
+}
