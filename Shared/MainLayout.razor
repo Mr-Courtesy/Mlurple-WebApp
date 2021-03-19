@@ -11,11 +11,11 @@
 
 <div class="main">
     <div class="top-row px-4">
-        @if (isAuthorized == true)
+        @if (currentUser != null)
         {
             <a href="/logout">Logout</a>
         }
-        else if (isAuthorized == false)
+        else if (currentUser == null)
         {
             <a href="/register">Register</a>
             <a href="/login">Login</a>
@@ -29,9 +29,9 @@
 @* </div> *@
 @code
 {
-    bool isAuthorized;
+    string currentUser;
     protected override async Task OnInitializedAsync()
     {
-        isAuthorized = await StorageService.GetItemAsync<bool>("authorized");
+        currentUser = await StorageService.GetItemAsync<string>("username");
     }
 }
