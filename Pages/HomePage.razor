@@ -3,35 +3,40 @@
 @using Mlurple_WebApp.Classes
 @inherits HomePageBase
 
-@if (_authState == false)
+@if (currentUser == null)
 {
-    @CurrentUser
     <h1>You're not logged in</h1> 
 }
-else if (_authState == true)
+@if (currentUser != null)
 {
-    @CurrentUser
+    @currentUser
     <div class="py-5 text-center container">
         <div class="row py-lg-5">
             <div class="col-lg-6 col-md-8 mx-auto">
-                <h1 class="f1-dark">Hello, @SessionUser.username</h1>
+                <h1 class="f1-dark">Hello, @currentUser</h1>
                 <p class="lead text-muted">Team collaboration made easier, get started on your next project now!</p>
             </div>
         </div>
     </div>
-
-    @if (hasProjects == true)
+ 
+    @foreach (var p in userprojects)
     {
-        @foreach (var p in SessionUser.projects)
-        {
-            <h1>@p</h1>
-        }
-    }
-    else if (hasProjects == false)
-    {
-        <h1>No projects found.</h1>
+        <h1>@p</h1>
     }
     <br>
     <br>
     <button @onclick="@OpenCreationPage">Create new project</button>
+}
+@code 
+{
+    string currentUser;
+    List<string> userprojects = new List<string>();
+    protected override async Task OnInitializedAsync()
+    {
+        currentUser =  await StorageService.GetItemAsync<string>("username");
+        if (currentUser != null)
+        {
+            userprojects = await GetUserProjects(currentUser);
+        }
+    }
 }
