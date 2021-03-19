@@ -5,18 +5,28 @@ using Mlurple_WebApp.Classes;
 using System.Net.Http;
 using NETCore.Encrypt;
 using System.Collections.Generic;
+using Blazored.LocalStorage;
+using System.Threading.Tasks;
 
 namespace Mlurple_WebApp.Pages
 {
     public class RegisterPageBase : ComponentBase
     {
-        public UserModel userModel = new UserModel();
+        [Inject]
+        protected ILocalStorageService StorageService { get; set; }
+        protected string Username;
+        protected string Password;
+        protected string CurrentUser;
         public string RegisterStatus;
         [Inject]
         public NavigationManager NavManager { get; set; }
+        protected override async Task OnInitializedAsync()
+        {
+            CurrentUser = await StorageService.GetItemAsync<string>("username");
+        }
         public async void HandleValidSubmit()
         {
-            char[] _username = userModel.Username.ToCharArray();
+            char[] _username = Username.ToCharArray();
             bool isValidUsername = _username.All(Char.IsLetterOrDigit);
             bool hasOnlyNumbers = _username.All(char.IsNumber);
             bool usernameIsLongEnough = _username.Length >= 3;
@@ -40,7 +50,7 @@ namespace Mlurple_WebApp.Pages
                 RegisterStatus = "Username cannot be more than 10 characters long.";
             }
 
-            char[] _password = userModel.Password.ToCharArray();
+            char[] _password = Password.ToCharArray();
             bool passwordIsLongEnough = _password.Length >= 6;
             bool passwordIsNotValid = _password.All(Char.IsNumber);
             bool passwordHasWhitespace = _password.Contains(' ');
@@ -72,8 +82,8 @@ namespace Mlurple_WebApp.Pages
                     {
                         if (passwordIsLongEnough && !passwordIsNotValid && !passwordHasWhitespace && !passwordIsTooLong)
                         {
-                            string encryptedUsername = EncryptProvider.AESEncrypt(userModel.Username, "key");
-                            string encryptedPassword = EncryptProvider.AESEncrypt(userModel.Password, "key");
+                            string encryptedUsername = EncryptProvider.AESEncrypt(Username, "key");
+                            string encryptedPassword = EncryptProvider.AESEncrypt(Password, "key");
 
                             HttpClient client = new HttpClient();
                             HttpRequestMessage request = new HttpRequestMessage()
@@ -90,15 +100,16 @@ namespace Mlurple_WebApp.Pages
                                     var body = response.Content.ReadAsStringAsync();
                                     if (body.Result == "User was succesfully registered.")
                                     {
-                                        SessionUser.username = userModel.Username;
-                                        Session.isAuthorized = true;
-                                        RegisterStatus = SessionUser.username;
-                                        RegisterStatus = body.Result;
+                                        await StorageService.SetItemAsync("username", Username);
                                         NavManager.NavigateTo("/home");
                                     }
                                     else
                                     {
-                                        Session.isAuthorized = false;
+                                        bool containsUser = await StorageService.ContainKeyAsync("username");
+                                        if (containsUser)
+                                        {
+                                            await StorageService.RemoveItemAsync("username");
+                                        }
                                         RegisterStatus = body.Result;
                                     }
                                 }
