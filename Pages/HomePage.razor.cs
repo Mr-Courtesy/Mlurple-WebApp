@@ -23,7 +23,6 @@ namespace Mlurple_WebApp.Pages
         protected async Task<List<string>> GetUserProjects(string username)
         {
             string encryptedUsername = EncryptProvider.AESEncrypt(username, "key");
-
             HttpClient client = new HttpClient();
             HttpRequestMessage request = new HttpRequestMessage()
             {
@@ -35,15 +34,16 @@ namespace Mlurple_WebApp.Pages
             {
                 response.EnsureSuccessStatusCode();
                 var body = response.Content.ReadAsStringAsync().Result;
+                List<string> userProjects = new List<string>();
                 if (body == "No projects found.")
                 {
-                    await StorageService.SetItemAsync("projects", "No projects found");
+                    userProjects.Add(body);
+                    await StorageService.SetItemAsync("projects", userProjects);
+                    await StorageService.SetItemAsync("projectcount", 0);
                 }
                 else
                 {
                     var projects = body.Split("&");
-                    List<string> userProjects = new List<string>();
-
                     foreach (var proj in projects)
                     {
                         if (proj != null && !userProjects.Contains(proj))
@@ -52,9 +52,10 @@ namespace Mlurple_WebApp.Pages
                         }
                     }
                     await StorageService.SetItemAsync("projects", userProjects);
+                    await StorageService.SetItemAsync("projectcount", projects.Length);
                 }
-                List<string> projs = await StorageService.GetItemAsync<List<string>>("projects");
-                return projs;
+                var sessionProjects = await StorageService.GetItemAsync<List<string>>("projects");
+                return sessionProjects;
             }
         }
         public void OpenCreationPage(MouseEventArgs e)
