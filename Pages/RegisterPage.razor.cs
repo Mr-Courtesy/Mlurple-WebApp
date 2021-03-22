@@ -101,6 +101,7 @@ namespace Mlurple_WebApp.Pages
                                     if (body.Result == "User was succesfully registered.")
                                     {
                                         await StorageService.SetItemAsync("username", Username);
+                                        await GetUserProjects(Username);
                                         NavManager.NavigateTo("/home");
                                     }
                                     else
@@ -109,6 +110,7 @@ namespace Mlurple_WebApp.Pages
                                         if (containsUser)
                                         {
                                             await StorageService.RemoveItemAsync("username");
+                                            await StorageService.ClearAsync();
                                         }
                                         RegisterStatus = body.Result;
                                     }
@@ -120,6 +122,45 @@ namespace Mlurple_WebApp.Pages
                             }
                         }
                     }
+                }
+            }
+        }
+        protected async Task GetUserProjects(string username)
+        {
+            int projectCount;
+            string encryptedUsername = EncryptProvider.AESEncrypt(username, "key");
+
+            HttpClient client = new HttpClient();
+            HttpRequestMessage request = new HttpRequestMessage()
+            {
+                Method = HttpMethod.Get,
+                RequestUri = new Uri($"https://mysupersecretapi.com/api/ProjectSpace?username={encryptedUsername}")
+            };
+
+            using (var response = await client.SendAsync(request))
+            {
+                response.EnsureSuccessStatusCode();
+                var body = response.Content.ReadAsStringAsync().Result;
+                if (body == "No projects found.")
+                {
+                    await StorageService.SetItemAsync("projects", "No projects found");
+                    await StorageService.SetItemAsync("projectcount", 0);
+                }
+                else
+                {
+                    var projects = body.Split("&");
+                    List<string> userProjects = new List<string>();
+
+                    foreach (var proj in projects)
+                    {
+                        if (proj != null && !userProjects.Contains(proj))
+                        {
+                            userProjects.Add(proj);
+                        }
+                    }
+                    projectCount = projects.Count();
+                    await StorageService.SetItemAsync("projects", userProjects);
+                    await StorageService.SetItemAsync("projectcount", projectCount);
                 }
             }
         }
