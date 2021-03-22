@@ -4,33 +4,36 @@ using Mlurple_WebApp.Classes;
 using System;
 using System.Net.Http;
 using NETCore.Encrypt;
+using Blazored.LocalStorage;
+using System.Threading.Tasks;
 
 namespace Mlurple_WebApp.Pages
 {
     public class CreateProjectBase : ComponentBase
     {
         [Inject]
+        ILocalStorageService StorageService { get ;set ;}
+        [Inject]
         NavigationManager NavigationManager { get; set; }
-        public ProjectSpace projectSpace = new ProjectSpace();
-        protected void CreateNewProject()
+        protected string Name;
+        protected string username;
+        protected async Task CreateNewProject()
         {
-            if (Session.isAuthorized)
+            username = await StorageService.GetItemAsync<string>("username");
+            string encryptedUsername = EncryptProvider.AESEncrypt(username, "key");
+            HttpClient client = new HttpClient();
+            HttpRequestMessage request = new HttpRequestMessage()
             {
-                string encryptedUsername = EncryptProvider.AESEncrypt(SessionUser.username, "key");
-                HttpClient client = new HttpClient();
-                HttpRequestMessage request = new HttpRequestMessage()
-                {
-                    Method = HttpMethod.Post,
-                    RequestUri = new Uri($"https://mysupersecretapi.com/api/ProjectSpace?username={encryptedUsername}&projectSpaceName={projectSpace.Name}")
-                };
+                Method = HttpMethod.Post,
+                RequestUri = new Uri($"https://mysupersecretapi.com/api/ProjectSpace?username={encryptedUsername}&projectSpaceName={Name}")
+            };
 
-                using (var response = client.Send(request))
+            using (var response = client.Send(request))
+            {
+                response.EnsureSuccessStatusCode();
+                if (response.IsSuccessStatusCode)
                 {
-                    response.EnsureSuccessStatusCode();
-                    if (response.IsSuccessStatusCode)
-                    {
-                        NavigationManager.NavigateTo("/home");
-                    }
+                    NavigationManager.NavigateTo("/home");
                 }
             }
         }
