@@ -1,10 +1,36 @@
 @page "/create"
 @inherits CreateProjectBase
+@using NETCore.Encrypt
+@inject Blazored.LocalStorage.ILocalStorageService StorageService
 
-<EditForm Model="@projectSpace" OnValidSubmit="@CreateNewProject">
-    <DataAnnotationsValidator />
-    <ValidationSummary />
+@if (Username != null)
+{
+    @if (projectcount < 2)
+    {
+        <form @onsubmit="@CreateNewProject">
+            <input type="text" placeholder="Project name..."  @bind-value="Name"/>
+            <input type="submit">Create
+        </form>
+    }
+    else 
+    {
+        <h1>Sorry, currently you can only have 2 project spaces at a time.</h1>
+    }
+}
+else 
+{
+    <h1>You're not logged in!</h1>
+}
 
-    <InputText aria-placeholder="Project name..."  @bind-Value="projectSpace.Name"/>
-    <input type="submit">Create
-</EditForm>
+
+@code
+{
+    string Username;
+    int projectcount;
+    protected override async Task OnInitializedAsync()
+    {
+        Username = await StorageService.GetItemAsync<string>("username");
+        projectcount = await StorageService.GetItemAsync<int>("projectcount");
+    }
+}
+
