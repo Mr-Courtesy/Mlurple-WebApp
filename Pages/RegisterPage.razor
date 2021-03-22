@@ -2,11 +2,11 @@
 @using Mlurple_WebApp.Classes;
 @inherits RegisterPageBase;
 
-@if (CurrentUser == null)
+@if (_username == null)
 {
     <main class="login">
     <form @onsubmit="@HandleValidSubmit">
-        <h3 id="loginHeader">Login</h3>
+        <h3 id="loginHeader">Register</h3>
         <br>
         <input type="text" id="loginUsername" placeholder="Username" class="form-control" required autofocus @bind-value="Username" />
         <input type="password" placeholder="Password" @bind-value="Password" class="form-control" required autofocus/>
@@ -18,5 +18,14 @@
 else 
 {
     <h1>You're already logged in.</h1>
+}
+
+@code
+{
+    string _username;
+    protected override async Task OnInitializedAsync()
+    {
+        _username = await StorageService.GetItemAsync<string>("username");
+    }
 }
 
