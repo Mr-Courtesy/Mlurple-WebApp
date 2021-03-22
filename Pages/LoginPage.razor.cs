@@ -42,8 +42,8 @@ namespace Mlurple_WebApp.Pages
                 LoginStatus = "Username or password is incorrect.";
             }
 
-            string encryptedUsername = EncryptProvider.AESEncrypt(_Username, "key");
-            string encryptedPassword = EncryptProvider.AESEncrypt(_Password, "key");
+            string encryptedUsername = EncryptProvider.AESEncrypt(_Username, "MwjMBBUhXpUTwELvG3BJ4Xqkszqai1vT");
+            string encryptedPassword = EncryptProvider.AESEncrypt(_Password, "MwjMBBUhXpUTwELvG3BJ4Xqkszqai1vT");
 
             if (isValidUsername && usernameIsLongEnough && !hasOnlyNumbers && passwordIsLongEnough && !passwordIsNotValid && !passwordHasWhitespace && !passwordIsTooLong)
             {
@@ -52,7 +52,7 @@ namespace Mlurple_WebApp.Pages
                 {
                     Method = HttpMethod.Get,
                     RequestUri = new
-                    Uri($"https://mysupersecretapi.com/api/User?username={encryptedUsername}&&password={encryptedPassword}")
+                    Uri($"https://testp-blazor-api.herokuapp.com/api/User?username={encryptedUsername}&&password={encryptedPassword}")
                 };
                 using (var response = await client.SendAsync(request))
                 {
@@ -80,6 +80,7 @@ namespace Mlurple_WebApp.Pages
         }
         protected async Task GetUserProjects(string username)
         {
+            int projectCount;
             string encryptedUsername = EncryptProvider.AESEncrypt(username, "key");
 
             HttpClient client = new HttpClient();
@@ -96,6 +97,7 @@ namespace Mlurple_WebApp.Pages
                 if (body == "No projects found.")
                 {
                     await StorageService.SetItemAsync("projects", "No projects found");
+                    await StorageService.SetItemAsync("projectcount", 0);
                 }
                 else
                 {
@@ -109,7 +111,9 @@ namespace Mlurple_WebApp.Pages
                             userProjects.Add(proj);
                         }
                     }
+                    projectCount = projects.Count();
                     await StorageService.SetItemAsync("projects", userProjects);
+                    await StorageService.SetItemAsync("projectcount", projectCount);
                 }
             }
         }
