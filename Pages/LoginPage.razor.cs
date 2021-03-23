@@ -81,13 +81,13 @@ namespace Mlurple_WebApp.Pages
         protected async Task GetUserProjects(string username)
         {
             int projectCount;
-            string encryptedUsername = EncryptProvider.AESEncrypt(username, "key");
+            string encryptedUsername = EncryptProvider.AESEncrypt(username, "MwjMBBUhXpUTwELvG3BJ4Xqkszqai1vT");
 
             HttpClient client = new HttpClient();
             HttpRequestMessage request = new HttpRequestMessage()
             {
                 Method = HttpMethod.Get,
-                RequestUri = new Uri($"https://mysupersecretapi.com/api/ProjectSpace?username={encryptedUsername}")
+                RequestUri = new Uri($"https://testp-blazor-api.herokuapp.com/api/ProjectSpace?username={encryptedUsername}")
             };
 
             using (var response = await client.SendAsync(request))

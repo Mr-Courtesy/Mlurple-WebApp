@@ -82,15 +82,15 @@ namespace Mlurple_WebApp.Pages
                     {
                         if (passwordIsLongEnough && !passwordIsNotValid && !passwordHasWhitespace && !passwordIsTooLong)
                         {
-                            string encryptedUsername = EncryptProvider.AESEncrypt(Username, "key");
-                            string encryptedPassword = EncryptProvider.AESEncrypt(Password, "key");
+                            string encryptedUsername = EncryptProvider.AESEncrypt(Username, "MwjMBBUhXpUTwELvG3BJ4Xqkszqai1vT");
+                            string encryptedPassword = EncryptProvider.AESEncrypt(Password, "MwjMBBUhXpUTwELvG3BJ4Xqkszqai1vT");
 
                             HttpClient client = new HttpClient();
                             HttpRequestMessage request = new HttpRequestMessage()
                             {
                                 Method = HttpMethod.Post,
                                 RequestUri = new
-                                Uri($"https://mysupersecretapi.com/api/User?username={encryptedUsername}&&password={encryptedPassword}")
+                                Uri($"https://testp-blazor-api.herokuapp.com/api/User?username={encryptedUsername}&&password={encryptedPassword}")
                             };
                             using (var response = await client.SendAsync(request))
                             {
@@ -128,13 +128,13 @@ namespace Mlurple_WebApp.Pages
         protected async Task GetUserProjects(string username)
         {
             int projectCount;
-            string encryptedUsername = EncryptProvider.AESEncrypt(username, "key");
+            string encryptedUsername = EncryptProvider.AESEncrypt(username, "MwjMBBUhXpUTwELvG3BJ4Xqkszqai1vT");
 
             HttpClient client = new HttpClient();
             HttpRequestMessage request = new HttpRequestMessage()
             {
                 Method = HttpMethod.Get,
-                RequestUri = new Uri($"https://mysupersecretapi.com/api/ProjectSpace?username={encryptedUsername}")
+                RequestUri = new Uri($"https://testp-blazor-api.herokuapp.com/api/ProjectSpace?username={encryptedUsername}")
             };
 
             using (var response = await client.SendAsync(request))

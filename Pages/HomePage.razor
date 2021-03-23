@@ -20,7 +20,26 @@
  
     @foreach (var p in userprojects)
     {
-        <h1>@p</h1>
+        @if (p != "")
+        {
+            <div class="project-card">
+                <div class="card mb-3" style="max-width: 570px;">
+                <div class="row g-0">
+                    <div class="col-md-4">
+                    <img src="..." alt="...">
+                </div>
+                <div class="col-md-8">
+                    <div class="card-body" @onclick="() => SetProject(p)">
+                        <h5 class="card-title">@p</h5>
+                        <p class="card-text">Brief project description</p>
+                        <p class="card-text"><small class="text-muted">Project space created on: March 10, 2021.</small></p>
+                        <p class="card-text"><small class="text-muted">Project expected to be completed by: March 21, 2021.</small></p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+        }
     }
     <br>
     <br>
@@ -43,5 +62,9 @@
             projectcount = await StorageService.GetItemAsync<int>("projectcount");
         }
     }
-    
+    protected async Task SetProject(string project)
+    {
+        await StorageService.SetItemAsync("project", project);
+        navigationManager.NavigateTo("/project");
+    }
 }

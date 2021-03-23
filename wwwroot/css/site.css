@@ -84,4 +84,14 @@ login .form-control {
     background-color: #ae42f7;
     color: white;
 }
+.project-card
+{
+    display: inline-block;
+    margin-inline-start: 15px;
+    margin-inline-end: 25px;
+}
+.project-card:hover
+{
+    cursor: pointer;
+}
 

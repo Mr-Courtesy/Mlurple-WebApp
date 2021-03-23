@@ -3,14 +3,14 @@
 
 @inherits ProjectPageBase
 
-@if (Session.isAuthorized)
+@if (_username != null)
 {
-    @foreach (string info in Session.projectInfo)
+    @foreach (string info in projectInfo)
     {
         <p>@info</p>
     }
 }
-else if (!Session.isAuthorized)
+else if (_username == null)
 {
     <p>You're not logged in.</p>
 }
