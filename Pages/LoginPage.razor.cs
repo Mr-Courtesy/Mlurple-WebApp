@@ -23,36 +23,47 @@ namespace Mlurple_WebApp.Pages
         protected override async Task OnInitializedAsync()
         {
             CurrentUser = await StorageService.GetItemAsync<string>("username");
+            if (CurrentUser != null)
+            {
+                NavManager.NavigateTo("/home");
+            }
         }
 
         public async void HandleValidSubmit()
         {
             char[] _username = _Username.ToCharArray();
-            bool isValidUsername = _username.All(Char.IsLetterOrDigit);
+            bool hasWhitespace = false;
+            foreach (char c in _username)
+            {
+                if (char.IsWhiteSpace(c))
+                {
+                    hasWhitespace = true;
+                }
+            }
+
             bool hasOnlyNumbers = _username.All(char.IsNumber);
             bool usernameIsLongEnough = _username.Length >= 3;
-            bool usernameIsTooLong = _username.Length > 15;
             char[] _password = _Password.ToCharArray();
             bool passwordIsLongEnough = _password.Length >= 6;
             bool passwordIsNotValid = _password.All(Char.IsNumber);
             bool passwordHasWhitespace = _password.Contains(' ');
             bool passwordIsTooLong = _password.Length > 20;
-            if (!isValidUsername || hasOnlyNumbers || !usernameIsLongEnough || usernameIsTooLong || passwordIsNotValid || !passwordIsLongEnough || passwordHasWhitespace || passwordIsTooLong)
+            if (!hasWhitespace || hasOnlyNumbers || !usernameIsLongEnough || passwordIsNotValid || !passwordIsLongEnough || passwordHasWhitespace || passwordIsTooLong)
             {
-                LoginStatus = "Username or password is incorrect.";
+                LoginStatus = "Email or password is incorrect.";
             }
 
             string encryptedUsername = EncryptProvider.AESEncrypt(_Username, "key");
             string encryptedPassword = EncryptProvider.AESEncrypt(_Password, "key");
-
-            if (isValidUsername && usernameIsLongEnough && !hasOnlyNumbers && passwordIsLongEnough && !passwordIsNotValid && !passwordHasWhitespace && !passwordIsTooLong)
+            LoginStatus += $":{encryptedUsername} and {encryptedPassword}";
+            if (!hasWhitespace && usernameIsLongEnough && !hasOnlyNumbers && passwordIsLongEnough && !passwordIsNotValid && !passwordHasWhitespace && !passwordIsTooLong)
             {
                 HttpClient client = new HttpClient();
                 HttpRequestMessage request = new HttpRequestMessage()
                 {
                     Method = HttpMethod.Get,
                     RequestUri = new
-                    Uri($"https://mysupersecretapi.com/api/User?username={encryptedUsername}&&password={encryptedPassword}")
+                    Uri($"https://supersecretapi.com/api/User?email={encryptedUsername}&&password={encryptedPassword}")
                 };
                 using (var response = await client.SendAsync(request))
                 {
@@ -60,19 +71,21 @@ namespace Mlurple_WebApp.Pages
                     if (response.IsSuccessStatusCode)
                     {
                         var body = response.Content.ReadAsStringAsync();
-                        if (body.Result == "true")
-                        {
-                            await StorageService.SetItemAsync("username", _Username);
-                            await StorageService.SetItemAsync("password", encryptedPassword);
-                            await StorageService.SetItemAsync("authstate", "authorized");
-                            await GetUserProjects(_Username);
-                            NavManager.NavigateTo("/home");
-                        }
-                        else if (body.Result == "false")
+
+                        if (body.Result == "false")
                         {
                             bool containsUser = await StorageService.ContainKeyAsync("username");
                             await StorageService.SetItemAsync<string>("authstate", "notAuthorized");
                             LoginStatus = $"{body.Result}: Username or password is incorrect";
+                        }
+                        else 
+                        {
+                            await StorageService.SetItemAsync("username", body.Result);
+                            await StorageService.SetItemAsync("email", _Username);
+                            await StorageService.SetItemAsync("password", encryptedPassword);
+                            await StorageService.SetItemAsync("authstate", "authorized");
+                            await GetUserProjects(_Username);
+                            NavManager.NavigateTo("/home");
                         }
                     }
                 }
@@ -87,7 +100,7 @@ namespace Mlurple_WebApp.Pages
             HttpRequestMessage request = new HttpRequestMessage()
             {
                 Method = HttpMethod.Get,
-                RequestUri = new Uri($"https://mysupersecretapi.com/api/ProjectSpace?username={encryptedUsername}")
+                RequestUri = new Uri($"https://supersecretapi.com/api/ProjectSpace?email={encryptedUsername}")
             };
 
             using (var response = await client.SendAsync(request))
