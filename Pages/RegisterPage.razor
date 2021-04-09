@@ -4,11 +4,44 @@
 
 @if (_username == null)
 {
+    <div class="container">
+    <div class="row">
+      <div class="col-sm-9 col-md-7 col-lg-5 mx-auto">
+        <div class="card card-signin my-5">
+          <div class="card-body">
+            <h5 class="card-title text-center">Create an account</h5>
+            <form class="form-signin" @onsubmit="@HandleValidSubmit">
+              <div class="form-label-group">
+                <input type="email" id="inputEmail" class="form-control" placeholder="Email address" required autofocus @bind-value="Email">
+                <label for="inputEmail">Email address</label>
+              </div>
+              <div class="form-label-group">
+                  <input type="text" id="inputUsername" class="form-control" placeholder="Username" required @bind-value="Username">
+                  <label for="inputUsername">Username</label>
+              </div>
+
+              <div class="form-label-group">
+                <input type="password" id="inputPassword" class="form-control" placeholder="Password" required @bind-value="Password">
+                <label for="inputPassword">Password</label>
+              </div>
+
+              
+              <button class="btn btn-lg login-button btn-block text-uppercase" type="submit">Register</button>
+              <p class="text-muted new-user-text text-center">
+  <small>Already have an account? Login <a href="/login">here</a></small>
+  </p>
+            </form>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
     <main class="login">
     <form @onsubmit="@HandleValidSubmit">
         <h3 id="loginHeader">Register</h3>
         <br>
-        <input type="text" id="loginUsername" placeholder="Username" class="form-control" required autofocus @bind-value="Username" />
+        <input type="email" id="loginUsername" placeholder="Username" class="form-control" required autofocus @bind-value="Username" />
         <input type="password" placeholder="Password" @bind-value="Password" class="form-control" required autofocus/>
         <input type="submit" class="w-100 btn btn-lg loginButton" />
     </form>
