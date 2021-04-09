@@ -19,13 +19,13 @@ namespace Mlurple_WebApp.Pages
         protected string username;
         protected async Task CreateNewProject()
         {
-            username = await StorageService.GetItemAsync<string>("username");
+            username = await StorageService.GetItemAsync<string>("email");
             string encryptedUsername = EncryptProvider.AESEncrypt(username, "key");
             HttpClient client = new HttpClient();
             HttpRequestMessage request = new HttpRequestMessage()
             {
                 Method = HttpMethod.Post,
-                RequestUri = new Uri($"https://mysupersecretapi.com/api/ProjectSpace?username={encryptedUsername}&projectSpaceName={Name}")
+                RequestUri = new Uri($"https://supersecretapi.com/api/ProjectSpace?email={encryptedUsername}&projectSpaceName={Name}")
             };
 
             using (var response = client.Send(request))
@@ -33,7 +33,7 @@ namespace Mlurple_WebApp.Pages
                 response.EnsureSuccessStatusCode();
                 if (response.IsSuccessStatusCode)
                 {
-                    NavigationManager.NavigateTo("/home");
+                    NavigationManager.NavigateTo($"/project/{Name}");
                 }
             }
         }
