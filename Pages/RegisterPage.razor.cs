@@ -14,6 +14,7 @@ namespace Mlurple_WebApp.Pages
     {
         [Inject]
         protected ILocalStorageService StorageService { get; set; }
+        protected string Email;
         protected string Username;
         protected string Password;
         protected string CurrentUser;
@@ -82,15 +83,15 @@ namespace Mlurple_WebApp.Pages
                     {
                         if (passwordIsLongEnough && !passwordIsNotValid && !passwordHasWhitespace && !passwordIsTooLong)
                         {
-                            string encryptedUsername = EncryptProvider.AESEncrypt(Username, "MwjMBBUhXpUTwELvG3BJ4Xqkszqai1vT");
-                            string encryptedPassword = EncryptProvider.AESEncrypt(Password, "MwjMBBUhXpUTwELvG3BJ4Xqkszqai1vT");
-
+                            string encryptedEmail = EncryptProvider.AESEncrypt(Email, "key");
+                            string encryptedUsername = EncryptProvider.AESEncrypt(Username, "key");
+                            string encryptedPassword = EncryptProvider.AESEncrypt(Password, "key");
                             HttpClient client = new HttpClient();
                             HttpRequestMessage request = new HttpRequestMessage()
                             {
                                 Method = HttpMethod.Post,
                                 RequestUri = new
-                                Uri($"https://testp-blazor-api.herokuapp.com/api/User?username={encryptedUsername}&&password={encryptedPassword}")
+                                Uri($"https://supersecretapi.com/api/User?email={encryptedEmail}&username={encryptedUsername}&password={encryptedPassword}")
                             };
                             using (var response = await client.SendAsync(request))
                             {
@@ -101,7 +102,8 @@ namespace Mlurple_WebApp.Pages
                                     if (body.Result == "User was succesfully registered.")
                                     {
                                         await StorageService.SetItemAsync("username", Username);
-                                        await GetUserProjects(Username);
+                                        await StorageService.SetItemAsync("email", Email);
+                                        await GetUserProjects(Email);
                                         NavManager.NavigateTo("/home");
                                     }
                                     else
@@ -125,16 +127,16 @@ namespace Mlurple_WebApp.Pages
                 }
             }
         }
-        protected async Task GetUserProjects(string username)
+        protected async Task GetUserProjects(string email)
         {
             int projectCount;
-            string encryptedUsername = EncryptProvider.AESEncrypt(username, "key");
+            string encryptedEmail = EncryptProvider.AESEncrypt(email, "key");
 
             HttpClient client = new HttpClient();
             HttpRequestMessage request = new HttpRequestMessage()
             {
                 Method = HttpMethod.Get,
-                RequestUri = new Uri($"https://mysupersecretapi.com/api/ProjectSpace?username={encryptedUsername}")
+                RequestUri = new Uri($"https://supersecretapi.com/api/ProjectSpace?email={encryptedEmail}")
             };
 
             using (var response = await client.SendAsync(request))
