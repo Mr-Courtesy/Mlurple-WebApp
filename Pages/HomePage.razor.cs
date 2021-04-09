@@ -20,14 +20,14 @@ namespace Mlurple_WebApp.Pages
         public static bool hasProjects { get; set; }
         protected string _authState { get; set; }
         
-        protected async Task<List<string>> GetUserProjects(string username)
+        protected async Task<List<string>> GetUserProjects(string email)
         {
-            string encryptedUsername = EncryptProvider.AESEncrypt(username, "key");
+            string encryptedEmail = EncryptProvider.AESEncrypt(email, "key");
             HttpClient client = new HttpClient();
             HttpRequestMessage request = new HttpRequestMessage()
             {
                 Method = HttpMethod.Get,
-                RequestUri = new Uri($"https://mysupersecretapi.com/api/ProjectSpace?username={encryptedUsername}")
+                RequestUri = new Uri($"https://supersecretapi.com/api/ProjectSpace?email={encryptedEmail}")
             };
 
             using (var response = await client.SendAsync(request))
@@ -52,6 +52,7 @@ namespace Mlurple_WebApp.Pages
                         }
                     }
                     await StorageService.SetItemAsync("projects", userProjects);
+                    await StorageService.RemoveItemAsync("projectcount");
                     await StorageService.SetItemAsync("projectcount", projects.Length);
                 }
                 var sessionProjects = await StorageService.GetItemAsync<List<string>>("projects");
