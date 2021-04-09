@@ -14,7 +14,7 @@ namespace Mlurple_WebApp.Pages
         protected override async Task OnInitializedAsync()
         {
             await StorageService.ClearAsync();
-            NavManager.NavigateTo("/");
+            NavManager.NavigateTo("/", true);
         }
     }
 }
