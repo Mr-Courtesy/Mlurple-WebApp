@@ -1,16 +1,32 @@
-@page "/project"
-@using Mlurple_WebApp.Classes
+@page "/project/{project}"
 
 @inherits ProjectPageBase
 
 @if (_username != null)
 {
-    @foreach (string info in projectInfo)
-    {
-        <p>@info</p>
-    }
+    <div class="container-fluid px-0">
+        <div class="fixed-top top-row px-4 bg-light text-secondary">
+            <h3 class="text-right"><a href="/logout">Logout</a></h3>
+        </div>
+        <nav class="project-sidenav pl-2 pt-2">
+            <h1 class="project-header text-uppercase font-weight-light">@ProjectInfoDictionary.GetValueOrDefault("_name")</h1>    
+        </nav>
+        <div class="project-dashboard">
+            <div class="project-tasks-container">
+                <ul class="list-group">
+                    @foreach (var task in ProjectTasksList)
+                    {
+                        <li class="list-group-item bg-light">@task</li>
+                    }
+                </ul>
+            </div>
+        </div>
+    </div>
 }
 else if (_username == null)
 {
     <p>You're not logged in.</p>
 }
+
+
+
