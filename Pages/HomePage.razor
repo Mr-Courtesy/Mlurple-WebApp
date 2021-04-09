@@ -3,68 +3,86 @@
 @using Mlurple_WebApp.Classes
 @inherits HomePageBase
 
-@if (currentUser == null)
+@if (username == null)
 {
     <h1>You're not logged in</h1> 
 }
-@if (currentUser != null)
+@if (username != null)
 {
-    <div class="py-5 text-center container">
+<div class="py-5 mx-0 mb-4 jumbotron jumbotron-fluid home-header">
+    <div class="text-center container">
         <div class="row py-lg-5">
             <div class="col-lg-6 col-md-8 mx-auto">
-                <h1 class="f1-dark">Hello, @currentUser</h1>
-                <p class="lead text-muted">Team collaboration made easier, get started on your next project now!</p>
+                <h1 class="f1-dark">Hello, @username</h1>
+                <p class="lead">Team collaboration made easier, get started on your next project now!</p>
             </div>
         </div>
     </div>
- 
-    @foreach (var p in userprojects)
+</div>
+<h3 class="text-dark">Your projects</h3>
+<hr>
+ <div class="card-group">
+    @if (projectcount != 0)
     {
-        @if (p != "")
+        @foreach (var p in userprojects)
         {
-            <div class="project-card">
-                <div class="card mb-3" style="max-width: 570px;">
-                <div class="row g-0">
-                    <div class="col-md-4">
-                    <img src="..." alt="...">
-                </div>
-                <div class="col-md-8">
-                    <div class="card-body" @onclick="() => SetProject(p)">
-                        <h5 class="card-title">@p</h5>
-                        <p class="card-text">Brief project description</p>
-                        <p class="card-text"><small class="text-muted">Project space created on: March 10, 2021.</small></p>
-                        <p class="card-text"><small class="text-muted">Project expected to be completed by: March 21, 2021.</small></p>
+            @if (p != "")
+            { 
+             <div class="card mx-auto" style="width: 300px;">
+                <div class="card-body bg-light" @onclick="() => SetProject(p)">
+                    <h5 class="card-title text-center">@p</h5>
+                    <h6 class="card-subtitle text-center">Overall progress:</h6>
+                    <div class="progress">
+                        <div class="progress-bar" role="progressbar" aria-valuenow="50" aria-valuemin="0" aria-valuemax="100" style="width: 50%;"></div>
                     </div>
+                    <h1 class="text-center">50%</h1>
                 </div>
             </div>
-        </div>
-    </div>
+            }
+        }
+        @for (int i = projectcount -1; i < 4; i++)
+        {
+            <div class="card mx-auto" style="width: 300px;">
+                <div class="card-body bg-light text-center">
+                    <h5 class="card-title">Empty project</h5>
+                    <h6 class="card-subtitle">Get started on your next team project!</h6>
+                    <button class="btn btn-create mt-3" @onclick="@OpenCreationPage">Create</button>
+                </div>
+            </div>
         }
     }
-    <br>
-    <br>
-    @if (projectcount < 2)
-    {
-        <button @onclick="@OpenCreationPage">Create new project</button>
+    else {
+        @for (int i = 0; i < 4; i++)
+        {
+            <div class="card mx-auto" style="width: 300px;">
+                <div class="card-body bg-light text-center">
+                    <h5 class="card-title">Empty project</h5>
+                    <h6 class="card-subtitle">Get started on your next team project!</h6>
+                    <button class="btn btn-create mt-3" @onclick="@OpenCreationPage">Create</button>
+                </div>
+            </div>
+        }
     }
+ </div>
 }
 @code 
 {
+    string username;
     string currentUser;
     List<string> userprojects = new List<string>();
     int projectcount;
     protected override async Task OnInitializedAsync()
     {
-        currentUser =  await StorageService.GetItemAsync<string>("username");
+        currentUser =  await StorageService.GetItemAsync<string>("email");
         if (currentUser != null)
         {
+            username = await StorageService.GetItemAsync<string>("username");
             userprojects = await GetUserProjects(currentUser);
             projectcount = await StorageService.GetItemAsync<int>("projectcount");
         }
     }
     protected async Task SetProject(string project)
     {
-        await StorageService.SetItemAsync("project", project);
-        navigationManager.NavigateTo("/project");
+        navigationManager.NavigateTo($"/project/{project}", true);
     }
 }
