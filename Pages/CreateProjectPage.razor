@@ -5,16 +5,44 @@
 
 @if (Username != null)
 {
-    @if (projectcount < 2)
+    @if (projectcount < 4)
     {
-        <form @onsubmit="@CreateNewProject">
-            <input type="text" placeholder="Project name..."  @bind-value="Name"/>
-            <input type="submit">Create
-        </form>
+
+        <div class="container">
+    <div class="row">
+      <div class="col-sm-9 col-md-7 col-lg-5 mx-auto">
+        <div class="card card-signin my-5">
+          <div class="card-body">
+            <h5 class="card-title text-center">Create a project</h5>
+            <form class="form-signin" @onsubmit="CreateNewProject">
+              <div class="form-label-group">
+                <input type="text" id="projectName" class="form-control" placeholder="Project name" required autofocus @bind-value="Name">
+                <label for="projectName">Project name</label>
+              </div>
+              <div class="form-group">
+                <select class="form-control" id="projectType" required>
+                    <option>Work project</option>
+                    <option>School project</option>
+                    <option>Hobby project</option>
+                </select>
+              </div>
+              <div class="form-label-group">
+                <textarea class="form-control" rows="2" placeholder="Brief project description..." required></textarea>
+              </div>
+              <button class="btn btn-lg login-button btn-block text-uppercase" type="submit">Create</button>
+              <p class="text-muted new-user-text text-center">
+                <small>Note: You can only have up to 4 project spaces at a time.</small>
+            </p>
+            </form>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
     }
     else 
     {
-        <h1>Sorry, currently you can only have 2 project spaces at a time.</h1>
+        <h1>Sorry, currently you can only have 4 project spaces at a time.</h1>
     }
 }
 else 
