@@ -2,36 +2,25 @@
 @using Mlurple_WebApp.Classes
 @using Blazored.LocalStorage
 @inject ILocalStorageService StorageService
+@inject NavigationManager NavManager
 
-@* <div class="page">
-    <div class="sidebar">
-    <NavMenu />
-    </div>
-</div> *@
 
-<div class="main">
-    <div class="top-row px-4">
-        @if (currentUser != null)
-        {
-            <a href="/logout">Logout</a>
-        }
-        else if (currentUser == null)
-        {
-            <a href="/register">Register</a>
-            <a href="/login">Login</a>
-        }
-    </div>
 
-    <div class="content px-4">
-        @Body
-    </div>
-</div>
-@* </div> *@
+    <div class="main">
+        <div class="content">
+            @Body
+        </div>
+  </div>
+
+
+
 @code
 {
     string currentUser;
+    string project;
     protected override async Task OnInitializedAsync()
     {
-        currentUser = await StorageService.GetItemAsync<string>("username");
+        currentUser =  await StorageService.GetItemAsync<string>("username");
+        project = await StorageService.GetItemAsync<string>("project");
     }
 }
