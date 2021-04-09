@@ -1,20 +1,33 @@
 @page "/login"
 @inherits LoginPageBase
 
-@if (CurrentUser != null)
-{
-    <h1>You're already logged in.</h1>
-}
-else {
-    <main class="login">
-    <form @onsubmit="@HandleValidSubmit">
-        <h3 id="loginHeader">Login</h3>
-        <br>
-        <input type="text" id="loginUsername" placeholder="Username" class="form-control" required autofocus @bind-value="_Username" />
-        <input type="password" placeholder="Password" @bind-value="_Password" class="form-control" required autofocus/>
-        <input type="submit" class="w-100 btn btn-lg loginButton" />
-    </form>
-</main>
 
+    <div class="container">
+    <div class="row">
+      <div class="col-sm-9 col-md-7 col-lg-5 mx-auto">
+        <div class="card card-signin my-5">
+          <div class="card-body">
+            <h5 class="card-title text-center">Sign In</h5>
+            <form class="form-signin" @onsubmit="@HandleValidSubmit">
+              <div class="form-label-group">
+                <input type="email" id="inputEmail" class="form-control" placeholder="Email address" required autofocus @bind-value="_Username">
+                <label for="inputEmail">Email address</label>
+              </div>
+
+              <div class="form-label-group">
+                <input type="password" id="inputPassword" class="form-control" placeholder="Password" required @bind-value="_Password">
+                <label for="inputPassword">Password</label>
+              </div>
+
+              
+              <button class="btn btn-lg login-button btn-block text-uppercase" type="submit">Sign in</button>
+              <p class="text-muted new-user-text text-center">
+  <small>New user? Register an account <a href="/register">here</a></small>
+  </p>
+            </form>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
 <h1>@LoginStatus</h1>
-}
