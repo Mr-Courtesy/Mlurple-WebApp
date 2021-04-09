@@ -4,11 +4,153 @@
 
 @if (auth == false)
 {
-    <h1>Hello, world!</h1>
-
-    <h2>Welcome to your new app.</h2>
-
-    <h1><SurveyPrompt Title="How is Blazor working for you?" /></h1>
+  <header class="header-blue">
+    <nav class="navbar navbar-dark navbar-expand-md navigation-clean-search">
+        <div class="container-fluid">
+          <a class="navbar-brand" href="#">
+            <img src="https://i.ibb.co/x78F2WB/favicon-cat.png" width="70" height="70" alt="">
+          </a>
+            <div id="navcol-1" class="collapse navbar-collapse">
+                <a class="navbar-brand" href="#">Mlurple</a>
+            </div>
+        </div>
+    </nav>
+    <div class="container hero">
+        <div class="row">
+            <div class="col-12 col-md-6 col-lg-6 col-xl-5 offset-md-0 offset-xl-1">
+                <h1>
+                    Team collaboration made easy
+                </h1>
+                <p>
+                    Effortlessly work on team projects, whether for work, school, or a hobby project, Mlurple makes team collaboration easy.
+                </p>
+                <button class="btn btn-light btn-lg action-button" type="button" @onclick="@GetStarted">
+                    Get started
+                </button>
+            </div>
+            <div class="col-md-5 col-lg offset-lg-1 offset-xl-0 d-none d-lg-block phone-holder">
+                <div class="phone-mockup">
+                    <img class="device" src="https://i.ibb.co/6ZMBZMb/creative-team.png" />
+                </div>
+            </div>
+        </div>
+    </div>
+</header>
+<section class="features-boxed">
+    <div class="card-deck">
+        <div class="card">
+            <img class="card-img-top" src="https://i.ibb.co/8BR6QRK/team-meeting-illustration.png" alt="Team collaboration picture">
+        <div class="card-body">
+            <h5 class="card-title text-center">Team Collaboration</h5>
+            <p class="card-text text-center">One of Mlurple's core focuses is efficient team collaboration. A notice board, automatic deadline reminders and assigning tasks are just some of the things at your teams disposal to efficiently work together.</p>
+        </div>
+    </div>
+  <div class="card">
+    <img class="card-img-top" src="https://i.ibb.co/zsmX8YM/project-manager.png" alt="Project organized image">
+    <div class="card-body">
+      <h5 class="card-title text-center">Organization</h5>
+      <p class="card-text text-center">You should spend your time working on your project, rather than attempting to organize it. Mlurple does the organizing for you, simply create the task and add it to a section. Mlurple's layout ensures everything is easy to read and is never cluttered. Completed tasks even get put into their own section to avoid confusion.</p>
+    </div>
+  </div>
+  <div class="card">
+    <img class="card-img-top" src="https://i.ibb.co/qpBt0Sr/chat.png" alt="Chat image">
+    <div class="card-body">
+      <h5 class="card-title text-center">Communication</h5>
+      <p class="card-text text-center">Communication is a very important aspect of team collaboration, that's why Mlurple has its own chat integrated into every project space. Easily communicate with your team without ever having to change tabs.</p>
+    </div>
+  </div>
+</div>
+<div class="project-steps">
+    <div class="card mb-3 mx-auto" style="max-width: 800px;">
+  <div class="row no-gutters">
+    <div class="col-md-4">
+      <img src="https://i.ibb.co/VN5jYP8/Screenshot-2021-03-29-11-38-24-PM.png" class="card-img" alt="Number 1">
+    </div>
+    <div class="col-md-8">
+      <div class="card-body">
+        <h5 class="card-title">Create a project space</h5>
+        <p class="card-text">Your project space serves as the hub for everything your team needs in order to be able to complete your project.</p>
+      </div>
+    </div>
+  </div>
+</div>
+<div class="card mb-3 mx-auto" style="max-width: 800px;">
+  <div class="row no-gutters">
+    <div class="col-md-4">
+      <img src="https://i.ibb.co/dKNGtPM/Screenshot-2021-03-29-11-42-54-PM.png" class="card-img" alt="Number 2 image">
+    </div>
+    <div class="col-md-8">
+      <div class="card-body">
+        <h5 class="card-title">Add tasks</h5>
+        <p class="card-text">Add tasks to your project so your team knows what needs to be done. You can even create your own sections for different parts of your project and add tasks to it for even more organization.</p>
+      </div>
+    </div>
+  </div>
+</div>
+<div class="card mb-3 mx-auto" style="max-width: 800px;">
+  <div class="row no-gutters">
+    <div class="col-md-4">
+      <img src="https://i.ibb.co/99b5Hz6/Screenshot-2021-03-29-11-48-47-PM.png" class="card-img" alt="Number 3 image">
+    </div>
+    <div class="col-md-8">
+      <div class="card-body">
+        <h5 class="card-title">Invite your team</h5>
+        <p class="card-text">What's a team project without the team? Invite your team with an auto-generated code. They need to be a registered user in order to be able to join.</p>
+      </div>
+    </div>
+  </div>
+</div>
+<div class="card mb-3 mx-auto" style="max-width: 800px;">
+  <div class="row no-gutters">
+    <div class="col-md-4">
+      <img src="https://i.ibb.co/yFBTBvG/Screenshot-2021-03-29-11-52-43-PM.png" class="card-img" alt="Number 4 image">
+    </div>
+    <div class="col-md-8">
+      <div class="card-body">
+        <h5 class="card-title">Get started!</h5>
+        <p class="card-text">Now that you've got your project set up, you can get started on working with your team and completing your project!</p>
+      </div>
+    </div>
+  </div>
+</div>
+</div>
+<div class="jumbotron home-try text-center">
+  <h1 class="display-4">Don't take our word for it!</h1>
+  <p class="lead">Try out Mlurple for yourself and see how it can help your team complete its project!</p>
+  <button class="btn btn-light btn-lg action-button" type="button" @onclick="@GetStarted">
+        Get started
+    </button>
+</div>
+        <div class="footer-dark">
+        <footer>
+            <div class="container">
+                <div class="row">
+                    <div class="col-sm-6 col-md-3 item">
+                        <h3>Useful Links</h3>
+                        <ul>
+                            <li><a href="#">Login</a></li>
+                            <li><a href="#">Register</a></li>
+                            <li><a href="#">Open Source</a></li>
+                        </ul>
+                    </div>
+                    <div class="col-sm-6 col-md-3 item">
+                        <h3>Get in touch</h3>
+                        <ul>
+                            <li><a href="#">Twitter</a></li>
+                            <li><a href="#">Instagram</a></li>
+                            <li><a href="#">Email</a></li>
+                        </ul>
+                    </div>
+                    <div class="col-md-6 item text">
+                        <h3>Mlurple</h3>
+                        <p>Team collaboration made easier, Mlurple helps your team stay organized and complete your team project.</p>
+                    </div>
+                <p class="copyright">Mlurple © 2021</p>
+            </div>
+            </div>
+        </footer>
+    </div>
+</section>
 }
 
 
@@ -27,5 +169,9 @@
         {
             auth = false;
         }
+    }
+    protected async Task GetStarted(MouseEventArgs e)
+    {
+        NavManager.NavigateTo("/login");
     }
 }
